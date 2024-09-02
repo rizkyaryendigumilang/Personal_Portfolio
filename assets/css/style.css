@@ -1148,7 +1148,7 @@ article {
   position: relative;
   border-radius: 16px;
   box-shadow: var(--body-color);
-  background: #fff;
+  background: var(--body-color);
   transform-origin: center;
   transition: all 0.4s ease-in-out;
   overflow: hidden;
