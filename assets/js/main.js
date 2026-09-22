@@ -13,10 +13,14 @@ async function handleSubmit(event) {
     },
   })
     .then((response) => {
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
+
       status.innerHTML = "Your message has been sent.";
       document.querySelector(".alert_style").style.display = "block";
 
-      // hide alert after 3 seconds
+      // hide alert after 4 seconds
       setTimeout(function () {
         document.querySelector(".alert_style").style.display = "none";
       }, 4000);
@@ -27,7 +31,7 @@ async function handleSubmit(event) {
         "Oops! There was a problem delivering your message, please contact via other means.";
       document.querySelector(".alert_style").style.display = "block";
 
-      // hide alert after 3 seconds
+      // hide alert after 4 seconds
       setTimeout(function () {
         document.querySelector(".alert_style").style.display = "none";
       }, 4000);
@@ -212,7 +216,7 @@ themeButton.addEventListener("click", () => {
 
 // Typing Animation using Typed JS
 var typed = new Typed(".type", {
-  strings: ["System Adminstration", "Data Scince", "Human Capital Staff"],
+  strings: ["System Administration", "Data Science", "Human Capital Staff"],
   smartBackspace: true,
   startDelay: 1000,
   typeSpeed: 130,
