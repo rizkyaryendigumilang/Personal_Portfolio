@@ -1394,3 +1394,651 @@ button:focus-visible,
     transform: none !important;
   }
 }
+
+/* =========================================================
+   DESIGN IMPROVEMENT — full polish pass
+   Scope: visual/UI polish only. Existing HTML content and
+   main.js behavior remain unchanged.
+   ========================================================= */
+
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --motion-fast: 140ms;
+  --motion-ui: 200ms;
+  --motion-section: 280ms;
+  --surface-raised: color-mix(in srgb, var(--container-color) 94%, var(--first-color) 6%);
+  --border-subtle: color-mix(in srgb, var(--title-color) 10%, transparent);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.07);
+  --shadow-hover: 0 18px 45px rgba(0, 0, 0, 0.11);
+}
+
+/* Global polish: remove the broad transition from the root and
+   keep motion on actual interactive elements. */
+html {
+  scroll-padding-top: 5rem;
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+section {
+  scroll-margin-top: 5rem;
+}
+
+.section_title {
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.section_subtitle {
+  color: var(--text-color-light);
+  letter-spacing: 0.01em;
+}
+
+/* Desktop header becomes a light floating surface instead of a
+   visually heavy full-width bar. */
+@media screen and (min-width: 768px) {
+  .header {
+    background: color-mix(in srgb, var(--body-color) 84%, transparent);
+    border-bottom: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.035);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .nav {
+    min-height: calc(var(--header-height) + 1.5rem);
+  }
+
+  .nav_logo {
+    letter-spacing: -0.02em;
+  }
+
+  .nav_list {
+    align-items: center;
+  }
+
+  .nav_link {
+    position: relative;
+    padding: 0.35rem 0;
+  }
+
+  .nav_link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    bottom: -0.35rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--first-color);
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: left var(--motion-ui) var(--ease-out),
+      right var(--motion-ui) var(--ease-out),
+      opacity var(--motion-ui) ease;
+  }
+
+  .nav_link:hover::after,
+  .nav_link.active-link::after {
+    left: 0;
+    right: 0;
+    opacity: 1;
+  }
+}
+
+/* Hero: preserve every existing word, but create stronger visual hierarchy. */
+.home {
+  min-height: min(860px, 100svh);
+  display: flex;
+  align-items: center;
+}
+
+.home_container {
+  width: 100%;
+}
+
+.home_content {
+  row-gap: 2rem;
+}
+
+.home_title {
+  max-width: 760px;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+.home_subtitle {
+  margin-top: 0.75rem;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  letter-spacing: -0.015em;
+}
+
+.home_description {
+  max-width: 600px;
+  line-height: 1.8;
+  color: var(--text-color);
+}
+
+.home_img {
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.08));
+}
+
+.home_blob {
+  overflow: visible;
+}
+
+.home_social {
+  align-self: center;
+}
+
+.home_social-icon {
+  transition: color var(--motion-fast) ease,
+    transform var(--motion-ui) var(--ease-out);
+}
+
+.home_social-icon:hover {
+  transform: translateY(-3px);
+}
+
+.button {
+  min-height: 48px;
+  padding-inline: 1.1rem;
+  border-radius: 0.7rem;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-ui) ease,
+    background-color var(--motion-fast) ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+.button_icon {
+  transition: transform var(--motion-ui) var(--ease-out);
+}
+
+.button:hover .button_icon {
+  transform: translateX(3px);
+}
+
+/* Give sections a clearer rhythm without changing their content. */
+.about_container,
+.contact_container {
+  align-items: center;
+}
+
+.about_description,
+.contact_subtitle,
+.qualification_subtitle {
+  line-height: 1.75;
+}
+
+.about_img {
+  box-shadow: var(--shadow-soft);
+  transition: transform 300ms var(--ease-out), box-shadow 300ms ease;
+}
+
+.about_img:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Skills: make the accordion headers feel deliberate and improve
+   the collapsed/expanded state without JS changes. */
+.skills_content {
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--container-color) 76%, transparent);
+  overflow: hidden;
+  transition:
+    border-color var(--motion-ui) ease,
+    box-shadow var(--motion-ui) ease,
+    background-color var(--motion-ui) ease;
+}
+
+.skills_content:hover {
+  border-color: color-mix(in srgb, var(--first-color) 24%, transparent);
+}
+
+.skills_header {
+  margin-bottom: 0;
+  padding: 1.15rem 1.2rem;
+}
+
+.skills_list {
+  padding: 0 1.2rem 0 3.5rem;
+}
+
+.skills_open .skills_list {
+  padding-bottom: 1.2rem;
+}
+
+.skills_icon,
+.skills_arrow {
+  flex: 0 0 auto;
+}
+
+.skills_arrow {
+  transition: transform var(--motion-ui) var(--ease-out);
+}
+
+.skills_name {
+  line-height: 1.35;
+}
+
+.external-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 1.5rem;
+}
+
+.external-logo img {
+  width: 1.35rem;
+  height: 1.35rem;
+  object-fit: contain;
+}
+
+.skills_bar {
+  margin-top: 0.45rem;
+  opacity: 0.82;
+}
+
+/* Qualifications: improve timeline readability. */
+.qualification_data {
+  position: relative;
+}
+
+.qualification_title {
+  line-height: 1.35;
+}
+
+.qualification_calendar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.qualification_circle {
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--first-color) 12%, transparent);
+}
+
+/* Certificate carousel: cards should read as contained surfaces. */
+.certificate_content {
+  border: 1px solid var(--border-subtle);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--container-color) 96%, var(--first-color) 4%);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.certificate_img {
+  max-height: 240px;
+  object-fit: contain;
+  transition: transform 280ms var(--ease-out);
+}
+
+.certificate_content:hover .certificate_img {
+  transform: scale(1.015);
+}
+
+.certificate_title {
+  line-height: 1.35;
+}
+
+.certificate_description {
+  line-height: 1.65;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) ease;
+}
+
+.swiper-button-prev:hover {
+  transform: translateX(-3px);
+}
+
+.swiper-button-next:hover {
+  transform: translateX(3px);
+}
+
+.swiper-pagination-bullet {
+  transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) ease;
+}
+
+.swiper-pagination-bullet-active {
+  transform: scale(1.15);
+}
+
+/* Projects: fix old demo-like spacing and make the existing cards feel
+   like portfolio work rather than generic article blocks. */
+.projects {
+  padding-block: 3rem;
+}
+
+.articles {
+  width: min(100%, 1120px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding-inline: 1rem;
+}
+
+article {
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  background: var(--container-color);
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    box-shadow var(--motion-ui) ease,
+    border-color var(--motion-ui) ease;
+}
+
+article:has(:hover, :focus-within) {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--first-color) 22%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+article img {
+  transition: transform 400ms var(--ease-out);
+}
+
+article h2 {
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.article-body {
+  padding: 1.35rem 1.4rem 1.5rem;
+}
+
+.article-body p {
+  line-height: 1.7;
+}
+
+article a .icon {
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    opacity var(--motion-ui) ease;
+}
+
+/* Contact: stronger input states and clearer touch targets. */
+.contact_info {
+  padding: 0.9rem;
+  border-radius: 0.8rem;
+  transition:
+    background-color var(--motion-ui) ease,
+    transform var(--motion-ui) var(--ease-out);
+}
+
+.contact_info:hover {
+  background-color: color-mix(in srgb, var(--input-color) 65%, transparent);
+  transform: translateX(3px);
+}
+
+.contact_content {
+  border: 1px solid color-mix(in srgb, var(--first-color) 18%, transparent);
+  transition:
+    border-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    background-color var(--motion-fast) ease;
+}
+
+.contact_content:focus-within {
+  border-color: var(--first-color);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--first-color) 12%, transparent);
+}
+
+.contact_input {
+  min-height: 2rem;
+}
+
+textarea.contact_input {
+  min-height: 8rem;
+  line-height: 1.6;
+}
+
+/* Footer: reduce the old template feel. */
+.footer_bg {
+  border-top: 1px solid color-mix(in srgb, #fff 12%, transparent);
+}
+
+.social-icon__link {
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    opacity var(--motion-fast) ease;
+}
+
+.social-icon__link:hover {
+  transform: translateY(-4px);
+}
+
+.menu__link {
+  transition:
+    opacity var(--motion-fast) ease,
+    transform var(--motion-ui) var(--ease-out);
+}
+
+.menu__link:hover {
+  transform: translateY(-1px);
+}
+
+/* Scroll-to-top control: small, responsive feedback. */
+.scrollup {
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    background-color var(--motion-fast) ease,
+    opacity var(--motion-fast) ease;
+}
+
+.scrollup:hover {
+  transform: translateY(-3px);
+}
+
+/* Mobile-native polish: avoid sticky hover illusions and give controls
+   comfortable tap targets. */
+@media (hover: none) {
+  .button:hover,
+  .about_img:hover,
+  article:has(:hover, :focus-within),
+  .contact_info:hover,
+  .scrollup:hover,
+  .social-icon__link:hover,
+  .menu__link:hover {
+    transform: none;
+  }
+
+  .nav_link:hover::after {
+    opacity: 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  html {
+    scroll-padding-top: 1rem;
+  }
+
+  .section {
+    padding: 5rem 0 5rem;
+  }
+
+  .home {
+    min-height: auto;
+    padding-top: 4.5rem;
+  }
+
+  .home_content {
+    padding-top: 1.5rem;
+  }
+
+  .home_title {
+    font-size: clamp(2rem, 11vw, 3.1rem);
+  }
+
+  .home_description {
+    line-height: 1.7;
+  }
+
+  .home_blob {
+    width: min(210px, 58vw);
+  }
+
+  .home_social {
+    row-gap: 0.8rem;
+  }
+
+  .nav_menu {
+    border: 1px solid var(--border-subtle);
+    background: color-mix(in srgb, var(--body-color) 94%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .nav_link {
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  .skills_header {
+    min-height: 76px;
+  }
+
+  .skills_title {
+    line-height: 1.25;
+  }
+
+  .skills_subtitle {
+    line-height: 1.45;
+  }
+
+  .articles {
+    grid-template-columns: 1fr;
+    padding-inline: 0;
+  }
+
+  article {
+    border-radius: 14px;
+  }
+
+  .article-body p {
+    display: block;
+  }
+
+  .certificate_content {
+    padding-inline: 1.5rem;
+  }
+
+  .certificate_img {
+    max-height: 210px;
+  }
+
+  .contact_info {
+    min-height: 64px;
+  }
+
+  .footer {
+    padding-bottom: 1rem;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .container {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .home_title {
+    font-size: 2rem;
+  }
+
+  .home_blob {
+    width: 185px;
+  }
+
+  .articles {
+    gap: 1rem;
+  }
+
+  .article-body {
+    padding: 1.15rem;
+  }
+}
+
+/* Tablet/desktop project layout. */
+@media screen and (min-width: 768px) {
+  .articles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .article-wrapper {
+    display: block;
+  }
+
+  article figure {
+    aspect-ratio: 16 / 10;
+  }
+
+  article figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .home_title {
+    max-width: 820px;
+  }
+
+  .home_description {
+    max-width: 620px;
+  }
+
+  .articles {
+    gap: 1.75rem;
+  }
+}
+
+/* Reduced motion is a first-class state, not an afterthought. */
+@media (prefers-reduced-motion: reduce) {
+  .home_img,
+  .about_img,
+  .certificate_img {
+    filter: none;
+  }
+
+  .home_social-icon,
+  .button,
+  .button_icon,
+  .about_img,
+  .certificate_img,
+  article,
+  article img,
+  article a .icon,
+  .contact_info,
+  .scrollup,
+  .social-icon__link,
+  .menu__link,
+  .swiper-button-prev,
+  .swiper-button-next {
+    transition: none !important;
+  }
+}
