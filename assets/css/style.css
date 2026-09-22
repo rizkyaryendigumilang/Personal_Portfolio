@@ -347,8 +347,7 @@ button {
 }
 
 .home_scroll-button:hover {
-  transform: translateY(0.25rem);
-}
+  transform: translateY(0.25rem);}
 
 .home_scroll-mouse {
   font-size: 2rem;
@@ -697,8 +696,7 @@ button {
   margin: 10px;
 }
 
-/* CONTACT ME  */
-.contact_container {
+/* CONTACT ME  */.contact_container {
   row-gap: 3rem;
 }
 
@@ -1047,8 +1045,7 @@ button {
   }
 
   .skills_container,
-  .about_container {
-    grid-template-columns: repeat(2, 1fr);
+  .about_container {    grid-template-columns: repeat(2, 1fr);
   }
 
   .qualification_tabs {
@@ -1286,4 +1283,114 @@ body {
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+/* =========================================================
+   DESIGN IMPROVEMENT — interaction polish
+   Branch: design-improvement
+   No JavaScript changes required.
+   Inspired by emilkowalski/skills principles:
+   - purposeful motion
+   - short, responsive interactions
+   - restrained transforms
+   - accessible reduced-motion fallback
+   ========================================================= */
+
+/* Keep interactive motion focused and predictable. */
+.nav_link,
+.nav_logo,
+.change-theme,
+.home_social-icon,
+.button,
+.home_scroll-button,
+.scrollup,
+.skills_header,
+.qualification_button,
+.footer_link,
+.social-icon__link,
+.menu__link {
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    opacity 160ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Desktop navigation: subtle lift instead of a generic scale effect. */
+@media screen and (min-width: 768px) {
+  .nav_link:hover {
+    transform: translateY(-1px);
+  }
+
+  .nav_link:active {
+    transform: translateY(0);
+  }
+}
+
+/* Primary actions get a small amount of physical feedback. */
+.button {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  will-change: transform;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.10);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Social links: enough movement to communicate interactivity. */
+.home_social-icon:hover {
+  transform: translateY(-2px);
+}
+
+/* Project cards: soften the existing hover treatment. */
+article {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms ease,
+    background-color 220ms ease;
+}
+
+article:has(:hover, :focus-within) {
+  transform: translateY(-4px);
+}
+
+/* Make keyboard focus visible without changing the existing layout. */
+a:focus-visible,
+button:focus-visible,
+.nav_link:focus-visible,
+.skills_header:focus-visible,
+.qualification_button:focus-visible {
+  outline: 2px solid var(--first-color);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Respect users who explicitly request reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  article,
+  .button,
+  .nav_link,
+  .home_social-icon {
+    transform: none !important;
+  }
 }
