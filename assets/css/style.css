@@ -2042,3 +2042,78 @@ textarea.contact_input {
     transition: none !important;
   }
 }
+
+
+/* =========================================================
+   PROJECTS — compact card sizing
+   Keep project content unchanged; reduce visual footprint.
+   ========================================================= */
+
+.projects {
+  padding-block: 2.25rem;
+}
+
+.articles {
+  width: min(100%, 1040px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+  padding-inline: 0.75rem;
+}
+
+article {
+  border-radius: 12px;
+}
+
+article figure {
+  aspect-ratio: 16 / 8.5;
+}
+
+article h2 {
+  margin-bottom: 0.65rem;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.article-body {
+  padding: 1rem 1.05rem 1.15rem;
+}
+
+.article-body p {
+  line-height: 1.55;
+  font-size: 0.86rem;
+}
+
+@media screen and (max-width: 1023px) {
+  .articles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .projects {
+    padding-block: 1.75rem;
+  }
+
+  .articles {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding-inline: 0;
+  }
+
+  article figure {
+    aspect-ratio: 16 / 9;
+  }
+
+  .article-body {
+    padding: 1rem;
+  }
+
+  article h2 {
+    font-size: 1rem;
+  }
+
+  .article-body p {
+    font-size: 0.85rem;
+  }
+}
