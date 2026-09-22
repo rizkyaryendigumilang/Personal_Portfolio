@@ -1,226 +1,235 @@
-// Formspree code
+// Contact form
 const form = document.getElementById("contact-form");
+
+function showAlert(message) {
+  const alertBox = document.querySelector(".alert_style");
+  const status = document.getElementById("alert");
+
+  if (!alertBox || !status) return;
+
+  status.textContent = message;
+  alertBox.style.display = "block";
+
+  window.setTimeout(() => {
+    alertBox.style.display = "none";
+  }, 4000);
+}
 
 async function handleSubmit(event) {
   event.preventDefault();
-  var status = document.getElementById("alert");
-  var data = new FormData(event.target);
-  fetch(event.target.action, {
-    method: form.method,
-    body: data,
-    headers: {
-      Accept: "application/json",
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Form submission failed");
-      }
 
-      status.innerHTML = "Your message has been sent.";
-      document.querySelector(".alert_style").style.display = "block";
+  const formData = new FormData(event.currentTarget);
 
-      // hide alert after 4 seconds
-      setTimeout(function () {
-        document.querySelector(".alert_style").style.display = "none";
-      }, 4000);
-      form.reset();
-    })
-    .catch((error) => {
-      status.innerHTML =
-        "Oops! There was a problem delivering your message, please contact via other means.";
-      document.querySelector(".alert_style").style.display = "block";
-
-      // hide alert after 4 seconds
-      setTimeout(function () {
-        document.querySelector(".alert_style").style.display = "none";
-      }, 4000);
+  try {
+    const response = await fetch(event.currentTarget.action, {
+      method: event.currentTarget.method,
+      body: formData,
+      headers: {
+        Accept: "application/json",
+      },
     });
-}
-form.addEventListener("submit", handleSubmit);
 
-// FORM BORDERS 
-$("#contact-form input,#contact-form textarea").on("input focusin",(e)=>{
-  $(e.target).parent().addClass("focusIn");
-  if ($(e.target).val().trim().length > 0) {
-    $(e.target).parent().addClass("valid");
-    $(e.target).parent().removeClass("invalid");
-  } else {
-    $(e.target).parent().addClass("invalid");
-    $(e.target).parent().removeClass("valid");
+    if (!response.ok) {
+      throw new Error("Form submission failed");
+    }
+
+    showAlert("Your message has been sent.");
+    event.currentTarget.reset();
+  } catch (error) {
+    showAlert(
+      "Oops! There was a problem delivering your message, please contact via other means."
+    );
   }
-});
+}
 
-$("#contact-form input,#contact-form textarea").on("focusout",(e)=>{
-    $(e.target).parent().removeClass("focusIn");
-});
+if (form) {
+  form.addEventListener("submit", handleSubmit);
 
-// NAVIGATION PANEL
-let navMenu = document.getElementById("nav-menu"),
-  navToggle = document.getElementById("nav-toggle"),
-  navClose = document.getElementById("nav-close");
+  form.querySelectorAll("input, textarea").forEach((field) => {
+    const wrapper = field.parentElement;
 
-// MENU SHOW
-if (navToggle) {
-  navToggle.addEventListener("click", () => {
-    navMenu.classList.add("show-menu");
+    field.addEventListener("input", () => {
+      const hasValue = field.value.trim().length > 0;
+      wrapper.classList.toggle("valid", hasValue);
+      wrapper.classList.toggle("invalid", !hasValue);
+    });
+
+    field.addEventListener("focusin", () => {
+      wrapper.classList.add("focusIn");
+    });
+
+    field.addEventListener("focusout", () => {
+      wrapper.classList.remove("focusIn");
+    });
   });
 }
 
-// MENU HIDDEN
-if (navClose) {
-  navClose.addEventListener("click", () => {
-    navMenu.classList.remove("show-menu");
-  });
-}
+// Mobile navigation
+const navMenu = document.getElementById("nav-menu");
+const navToggle = document.getElementById("nav-toggle");
+const navClose = document.getElementById("nav-close");
 
-// REMOVE MENU MOBILE
-const navLink = document.querySelectorAll(".nav_link");
+navToggle?.addEventListener("click", () => {
+  navMenu?.classList.add("show-menu");
+});
 
-function linkAction() {
-  navMenu = document.getElementById("nav-menu");
-  navMenu.classList.remove("show-menu");
-}
-navLink.forEach((n) => n.addEventListener("click", linkAction));
+navClose?.addEventListener("click", () => {
+  navMenu?.classList.remove("show-menu");
+});
 
-// SKILLS
-const skillContent = document.querySelectorAll(".skill");
-const skillHeader = document.querySelectorAll(".skills_header");
-const skillContentArr = Array.from(skillContent);
-const skillHeaderArr = Array.from(skillHeader);
-
-skillHeaderArr.forEach((element, idx) => {
-  element.addEventListener("click", function () {
-    skillContentArr[idx].classList.toggle("skills_open");
+document.querySelectorAll(".nav_link").forEach((link) => {
+  link.addEventListener("click", () => {
+    navMenu?.classList.remove("show-menu");
   });
 });
 
-// QUALIFICATION TABS
-let education = document.getElementById("education");
-let work = document.getElementById("work");
-let educationheader = document.getElementById("educationheader");
-let educationheaderinformal = document.getElementById("educationheaderinformal");
-let workheader = document.getElementById("workheader");
-workheader.style.color = "var(--text-color)";
-educationheader.style.color = "var(--first-color)";
+// Skills accordion
+const skillContent = [...document.querySelectorAll(".skill")];
+const skillHeaders = document.querySelectorAll(".skills_header");
 
-educationheader.addEventListener("click", () => {
-  let condition1 = work.classList.contains("qualification-inactive");
-  if (!condition1) {
-    education.classList.remove("qualification-inactive");
-    work.classList.add("qualification-inactive");
-    workheader.style.color = "var(--text-color)";
-    educationheader.style.color = "var(--first-color)";
-  }
-});
-workheader.addEventListener("click", () => {
-  let condition2 = education.classList.contains("qualification-inactive");
-  if (!condition2) {
-    work.classList.remove("qualification-inactive");
-    education.classList.add("qualification-inactive");
-    educationheader.style.color = "var(--text-color)";
-    workheader.style.color = "var(--first-color)";
-  }
+skillHeaders.forEach((header, index) => {
+  header.addEventListener("click", () => {
+    skillContent[index]?.classList.toggle("skills_open");
+  });
 });
 
-// PORTFOLIO SWIPER
-let swiper = new Swiper(".mySwiper", {
-  cssMode: true,
-  loop: true,
+// Qualification tabs
+const education = document.getElementById("education");
+const work = document.getElementById("work");
+const educationHeader = document.getElementById("educationheader");
+const workHeader = document.getElementById("workheader");
 
-  navigation: {
-    nextEl: ".swiper-button-next",
-    prevEl: ".swiper-button-prev",
-  },
-  pagination: {
-    el: ".swiper-pagination",
-    clickable: true,
-  },
-  mousewheel: true,
-  keyboard: true,
-});
+function setQualificationTab(activeSection, inactiveSection, activeHeader, inactiveHeader) {
+  activeSection?.classList.remove("qualification-inactive");
+  inactiveSection?.classList.add("qualification-inactive");
 
-// SCROLL SECTIONS ACTIVE LINK
+  if (activeHeader) activeHeader.style.color = "var(--first-color)";
+  if (inactiveHeader) inactiveHeader.style.color = "var(--text-color)";
+}
+
+if (education && work && educationHeader && workHeader) {
+  setQualificationTab(education, work, educationHeader, workHeader);
+
+  educationHeader.addEventListener("click", () => {
+    if (education.classList.contains("qualification-inactive")) {
+      setQualificationTab(education, work, educationHeader, workHeader);
+    }
+  });
+
+  workHeader.addEventListener("click", () => {
+    if (work.classList.contains("qualification-inactive")) {
+      setQualificationTab(work, education, workHeader, educationHeader);
+    }
+  });
+}
+
+// Certificate carousel
+const swiperElement = document.querySelector(".mySwiper");
+
+if (swiperElement && typeof Swiper !== "undefined") {
+  new Swiper(swiperElement, {
+    cssMode: true,
+    loop: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    mousewheel: true,
+    keyboard: true,
+  });
+}
+
+// Scroll-based navigation state
 const sections = document.querySelectorAll("section[id]");
 
 function scrollActive() {
   const scrollY = window.pageYOffset;
 
-  sections.forEach((current) => {
-    const sectionHeight = current.offsetHeight;
-    const sectionTop = current.offsetTop - 50;
-    let sectionId = current.getAttribute("id");
+  sections.forEach((section) => {
+    const sectionHeight = section.offsetHeight;
+    const sectionTop = section.offsetTop - 50;
+    const sectionId = section.id;
+    const navLink = document.querySelector(
+      '.nav_menu a[href="#' + sectionId + '"]'
+    );
 
-    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-      document
-        .querySelector(".nav_menu a[href*=" + sectionId + "]")
-        .classList.add("active-link");
-    } else {
-      document
-        .querySelector(".nav_menu a[href*=" + sectionId + "]")
-        .classList.remove("active-link");
-    }
+    if (!navLink) return;
+
+    const isActive =
+      scrollY > sectionTop && scrollY <= sectionTop + sectionHeight;
+
+    navLink.classList.toggle("active-link", isActive);
   });
 }
-window.addEventListener("scroll", scrollActive);
 
-// HEADER SHADOW
+window.addEventListener("scroll", scrollActive, { passive: true });
+
+// Header shadow
 function scrollHeader() {
-  const nav = document.getElementById("header");
-  if (this.scrollY >= 80) nav.classList.add("scroll-header");
-  else nav.classList.remove("scroll-header");
-}
-window.addEventListener("scroll", scrollHeader);
+  const header = document.getElementById("header");
 
-// SHOW SCROLL UP BUTTON
-function scrollUpfunc() {
-  const scrollUp = document.getElementById("scroll-up");
-  if (this.scrollY >= 560) scrollUp.classList.add("show-scroll");
-  else scrollUp.classList.remove("show-scroll");
-}
-window.addEventListener("scroll", scrollUpfunc);
+  if (!header) return;
 
-// DARK/LIGHT THEME
+  header.classList.toggle("scroll-header", window.scrollY >= 80);
+}
+
+window.addEventListener("scroll", scrollHeader, { passive: true });
+
+// Scroll-to-top button
+function scrollUp() {
+  const scrollUpButton = document.getElementById("scroll-up");
+
+  if (!scrollUpButton) return;
+
+  scrollUpButton.classList.toggle("show-scroll", window.scrollY >= 560);
+}
+
+window.addEventListener("scroll", scrollUp, { passive: true });
+
+// Dark/light theme
 const themeButton = document.getElementById("theme-button");
 const darkTheme = "dark-theme";
 const iconTheme = "uil-sun";
 
-// Previously selected topic (if user selected)
-const selectedTheme = localStorage.getItem("selected-theme");
-const selectedIcon = localStorage.getItem("selected-icon");
+if (themeButton) {
+  const selectedTheme = localStorage.getItem("selected-theme");
+  const selectedIcon = localStorage.getItem("selected-icon");
 
-// obtain the current theme
-const getCurrentTheme = () =>
-  document.body.classList.contains(darkTheme) ? "dark" : "light";
-const getCurrentIcon = () =>
-  themeButton.classList.contains(iconTheme) ? "uil-moon" : "uil-sun";
+  const getCurrentTheme = () =>
+    document.body.classList.contains(darkTheme) ? "dark" : "light";
 
-if (selectedTheme) {
-  document.body.classList[selectedTheme === "dark" ? "add" : "remove"](
-    darkTheme
-  );
-  themeButton.classList[selectedIcon === "uil-moon" ? "add" : "remove"](
-    iconTheme
-  );
+  const getCurrentIcon = () =>
+    themeButton.classList.contains(iconTheme) ? "uil-moon" : "uil-sun";
+
+  if (selectedTheme) {
+    document.body.classList.toggle(darkTheme, selectedTheme === "dark");
+    themeButton.classList.toggle(iconTheme, selectedIcon === "uil-moon");
+  }
+
+  themeButton.addEventListener("click", () => {
+    document.body.classList.toggle(darkTheme);
+    themeButton.classList.toggle(iconTheme);
+
+    localStorage.setItem("selected-theme", getCurrentTheme());
+    localStorage.setItem("selected-icon", getCurrentIcon());
+  });
 }
 
-// Activate/Deactivate the theme manually with the button
-themeButton.addEventListener("click", () => {
-  // Add or remove the dark icon/theme
-  document.body.classList.toggle(darkTheme);
-  themeButton.classList.toggle(iconTheme);
-  // We save the theme and the current icon that the user chose
-  localStorage.setItem("selected-theme", getCurrentTheme());
-  localStorage.setItem("selected-icon", getCurrentIcon());
-});
+// Typing animation
+const typeTarget = document.querySelector(".type");
 
-// Typing Animation using Typed JS
-var typed = new Typed(".type", {
-  strings: ["System Administration", "Data Science", "Human Capital Staff"],
-  smartBackspace: true,
-  startDelay: 1000,
-  typeSpeed: 130,
-  backDelay: 1000,
-  backSpeed: 60,
-  loop: true,
-});
+if (typeTarget && typeof Typed !== "undefined") {
+  new Typed(typeTarget, {
+    strings: ["System Administration", "Data Science", "Human Capital Staff"],
+    smartBackspace: true,
+    startDelay: 1000,
+    typeSpeed: 130,
+    backDelay: 1000,
+    backSpeed: 60,
+    loop: true,
+  });
+}
