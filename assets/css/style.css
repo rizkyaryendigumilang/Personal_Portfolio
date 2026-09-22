@@ -2004,6 +2004,7 @@ textarea.contact_input {
 
 @media screen and (min-width: 1024px) {
   .articles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.75rem;
   }
 
