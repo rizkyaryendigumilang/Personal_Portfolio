@@ -1236,12 +1236,16 @@
 
       <script>
         (() => {
-          const perPage = 4;
+          const perPage = 6;
           const projects = [
             {title:"Netflix analytic Dashboard",category:"Data Analytics",description:"Netflix customer behavior analytical dashboard using distribution, rating and viewing data.",image:"./assets/img/Netflix-analytics dashbord.png",url:"#"},
             {title:"HR analytic Dashboard",category:"Data Analytics",description:"Tableau HR dashboard covering attrition, employees, gender, satisfaction, age and education.",image:"./assets/img/HR Analytics Dashboard.png",url:"#"},
             {title:"US Delay Flight 2017-2022",category:"Data Analytics",description:"Tableau dashboard analyzing delayed flights in the US by airline and year.",image:"./assets/img/US Flight Delay 2017-2022.png",url:"#"},
             {title:"Restaurants Order Overview Dashboard",category:"Data Analytics",description:"Interactive dashboard presenting key metrics and insights from restaurant order data.",image:"./assets/img/Resto-overview-dash.png",url:"https://lookerstudio.google.com/reporting/b357af35-231f-44e0-915e-1581a58369e8"},
+
+            // PAGE 1 — TEMPLATE SLOTS: replace these two objects with your newest projects.
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
 
             // PAGE 2
             {title:"API Text Cleansing",category:"Development",description:"API for cleaning text and files, with a local /docs interface. Created for my bootcamp class.",image:"./assets/img/output.png",url:"https://github.com/rizkyaryendigumilang/23001042-15-Kiky-project-gold"},
@@ -1270,8 +1274,8 @@
 
             timer = setTimeout(() => {
               pages.innerHTML = items.map(p => `
-                <article class="project-card">
-                  <a class="project-image" href="${p.url}" ${p.url !== "#" ? 'target="_blank" rel="noopener noreferrer"' : ""}>
+                <article class="project-card${p.template ? " project-card--template" : ""}">
+                  <a class="project-image" href="${p.url}" ${p.url !== "#" && !p.template ? 'target="_blank" rel="noopener noreferrer"' : ""}>
                     <img src="${p.image}" alt="${p.title}" loading="lazy">
                   </a>
                   <div class="project-content">
@@ -1279,7 +1283,7 @@
                     <h3>${p.title}</h3>
                     <p>${p.description}</p>
                     <a class="project-link" href="${p.url}" ${p.url !== "#" ? 'target="_blank" rel="noopener noreferrer"' : ""}>
-                      View project <i class="uil uil-arrow-up-right"></i>
+                      ${p.template ? "Replace with your project" : "View project"} <i class="uil uil-arrow-up-right"></i>
                     </a>
                   </div>
                 </article>`).join("");
