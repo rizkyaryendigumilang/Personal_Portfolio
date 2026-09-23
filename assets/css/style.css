@@ -2139,3 +2139,199 @@ textarea.contact_input {
 @media (prefers-reduced-motion:reduce){
   .project-pages,.project-image img,.project-link i,.project-page-arrow{transition:none!important}
 }
+
+
+/* =========================================================
+   CERTIFICATE — Phase 1
+   Compact cards, consistent preview frames, subtle motion,
+   and lightweight pagination to match the Projects section.
+   ========================================================= */
+
+.certificate-pages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: min(100%, 920px);
+  margin: 0 auto;
+  transition: opacity 240ms ease, transform 320ms var(--ease-out);
+}
+
+.certificate-pages.is-changing {
+  opacity: 0;
+}
+
+.certificate-pages.is-changing[data-direction="next"] {
+  transform: translateX(-18px);
+}
+
+.certificate-pages.is-changing[data-direction="prev"] {
+  transform: translateX(18px);
+}
+
+.certificate-pages .certificate_content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  background: var(--container-color);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 220ms var(--ease-out),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.certificate-pages .certificate_content:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--first-color) 22%, transparent);
+  box-shadow: var(--shadow-hover);
+}
+
+.certificate-pages .certificate_img {
+  width: 100%;
+  height: 150px;
+  max-height: none;
+  padding: 0.65rem;
+  object-fit: contain;
+  background: var(--input-color);
+  border-radius: 0;
+  transition: transform 350ms var(--ease-out);
+}
+
+.certificate-pages .certificate_content:hover .certificate_img {
+  transform: scale(1.025);
+}
+
+.certificate-pages .certificate_data {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.7rem 0.75rem 0.8rem;
+}
+
+.certificate-pages .certificate_title {
+  margin-bottom: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.certificate-pages .certificate_description {
+  display: -webkit-box;
+  margin: 0 0 0.65rem;
+  overflow: hidden;
+  color: var(--text-color);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.certificate-pages .certificate_button {
+  align-self: flex-start;
+  min-height: 32px;
+  margin-top: auto;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  font-size: 0.68rem;
+}
+
+.certificate-pages .certificate_button .button_icon {
+  font-size: 0.9rem;
+  margin-left: 0.1rem;
+}
+
+.certificate-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.35rem;
+}
+
+.certificate-page-numbers {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.25rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--container-color);
+}
+
+.certificate-page-number,
+.certificate-page-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--title-color);
+}
+
+.certificate-page-number {
+  min-width: 34px;
+  height: 32px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.certificate-page-number.active {
+  background: var(--title-color);
+  color: var(--container-color);
+}
+
+.certificate-page-number:hover:not(.active) {
+  background: var(--input-color);
+}
+
+.certificate-page-arrow {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-subtle);
+  transition:
+    transform 180ms var(--ease-out),
+    border-color 180ms ease;
+}
+
+.certificate-page-arrow:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--first-color);
+}
+
+.certificate-page-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+  .certificate-pages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .certificate-pages {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .certificate-pages .certificate_img {
+    height: 190px;
+  }
+
+  .certificate-pagination {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .certificate-pages,
+  .certificate-pages .certificate_content,
+  .certificate-pages .certificate_img,
+  .certificate-page-arrow {
+    transition: none !important;
+  }
+}
