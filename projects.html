@@ -20,14 +20,32 @@
     </header>
 
     <section class="projects-intro">
-      <p class="eyebrow">Portfolio</p>
-      <h1>Projects</h1>
-      <p>A collection of projects I have worked on.</p>
+      <div>
+        <p class="eyebrow">Portfolio</p>
+        <h1>Projects</h1>
+        <p>A collection of projects I have worked on.</p>
+      </div>
+      <div class="page-counter" aria-live="polite">
+        <span id="current-page">01</span>
+        <span class="counter-line"></span>
+        <span id="total-pages">02</span>
+      </div>
     </section>
 
     <section class="projects-section" aria-label="Projects">
       <div class="projects-grid" id="projects-grid"></div>
-      <nav class="projects-pagination" aria-label="Projects pagination" id="projects-pagination"></nav>
+
+      <nav class="projects-pagination" aria-label="Projects pagination">
+        <button class="pagination-arrow" id="previous-page" type="button" aria-label="Previous page">
+          <i class="uil uil-arrow-left"></i>
+        </button>
+
+        <div class="pagination-pages" id="projects-pagination"></div>
+
+        <button class="pagination-arrow" id="next-page" type="button" aria-label="Next page">
+          <i class="uil uil-arrow-right"></i>
+        </button>
+      </nav>
     </section>
   </main>
 
@@ -35,9 +53,16 @@
     /*
       PROJECT DATA
       ------------------------------------------------------------
-      4 projects are shown on each page automatically.
-      To add a project, copy the TEMPLATE object at the bottom.
-      You do not need to create another HTML page.
+      4 projects = 1 page.
+      The order below determines the page:
+        Page 1 -> projects 1-4
+        Page 2 -> projects 5-8
+        Page 3 -> projects 9-12
+        and so on.
+
+      TEMPLATE:
+      Copy one object and paste it after the last project.
+      When you add the 5th project, it automatically starts Page 2.
     */
 
     const PROJECTS_PER_PAGE = 4;
@@ -71,6 +96,8 @@
         image: "./assets/img/Resto-overview-dash.png",
         url: "https://lookerstudio.google.com/reporting/b357af35-231f-44e0-915e-1581a58369e8"
       },
+
+      // ==================== PAGE 2 ====================
       {
         title: "API Text Cleansing",
         category: "Development",
@@ -84,38 +111,47 @@
         description: "Handling a simple digital invitation project for a friend's wedding using HTML and CSS.",
         image: "./assets/img/Undangan Pernikahan Monica Wulandari & Bromo Ludhiro Yoesoep and 2 more pages - Personal - Microsoft_ Edge 2023-10-12 18-35-38.gif",
         url: "#"
-      }
+      },
 
-      /*
-        ============================================================
-        TEMPLATE — COPY THIS OBJECT TO ADD A NEW PROJECT
-        ============================================================
-
-        {
-          title: "Your Project Name",
-          category: "Data Analytics",
-          description: "Short description of what you built and what the project does.",
-          image: "./assets/img/projects/your-project-image.png",
-          url: "https://your-project-link.com"
-        }
-
-        ============================================================
-      */
+      // TEMPLATE — add projects here
+      // {
+      //   title: "Your Project Name",
+      //   category: "Data Analytics",
+      //   description: "Short description of what you built and what the project does.",
+      //   image: "./assets/img/your-project-image.png",
+      //   url: "https://your-project-link.com"
+      // },
+      // {
+      //   title: "Another Project",
+      //   category: "Development",
+      //   description: "Short description of another project.",
+      //   image: "./assets/img/another-project.png",
+      //   url: "https://your-project-link.com"
+      // }
     ];
 
     const grid = document.getElementById("projects-grid");
     const pagination = document.getElementById("projects-pagination");
+    const previousButton = document.getElementById("previous-page");
+    const nextButton = document.getElementById("next-page");
+    const currentPageLabel = document.getElementById("current-page");
+    const totalPagesLabel = document.getElementById("total-pages");
+
     let currentPage = 1;
+    let transitionTimer;
 
-    const totalPages = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+    const totalPages = Math.max(1, Math.ceil(projects.length / PROJECTS_PER_PAGE));
+    totalPagesLabel.textContent = String(totalPages).padStart(2, "0");
 
-    function renderProjects(page) {
+    function renderProjects(page, direction = 1) {
       const start = (page - 1) * PROJECTS_PER_PAGE;
       const visibleProjects = projects.slice(start, start + PROJECTS_PER_PAGE);
 
+      clearTimeout(transitionTimer);
+      grid.dataset.direction = direction > 0 ? "next" : "previous";
       grid.classList.add("is-changing");
 
-      window.setTimeout(() => {
+      transitionTimer = window.setTimeout(() => {
         grid.innerHTML = visibleProjects.map((project) => {
           const external = project.url !== "#"
             ? 'target="_blank" rel="noopener noreferrer"'
@@ -126,12 +162,10 @@
               <a href="${project.url}" class="project-image" ${external}>
                 <img src="${project.image}" alt="${project.title}" loading="lazy">
               </a>
-
               <div class="project-content">
                 <span class="project-category">${project.category}</span>
                 <h2>${project.title}</h2>
                 <p>${project.description}</p>
-
                 <a href="${project.url}" class="project-link" ${external}>
                   View project
                   <i class="uil uil-arrow-up-right"></i>
@@ -142,28 +176,17 @@
         }).join("");
 
         grid.classList.remove("is-changing");
-      }, 180);
+      }, 420);
     }
 
     function renderPagination() {
       pagination.innerHTML = "";
 
-      if (totalPages <= 1) return;
-
-      const previous = document.createElement("button");
-      previous.className = "pagination-arrow";
-      previous.type = "button";
-      previous.setAttribute("aria-label", "Previous page");
-      previous.innerHTML = '<i class="uil uil-arrow-left"></i>';
-      previous.disabled = currentPage === 1;
-      previous.addEventListener("click", () => changePage(currentPage - 1));
-      pagination.appendChild(previous);
-
       for (let page = 1; page <= totalPages; page++) {
         const button = document.createElement("button");
         button.className = "pagination-number";
         button.type = "button";
-        button.textContent = page;
+        button.textContent = String(page).padStart(2, "0");
         button.setAttribute("aria-label", `Go to page ${page}`);
 
         if (page === currentPage) {
@@ -175,21 +198,18 @@
         pagination.appendChild(button);
       }
 
-      const next = document.createElement("button");
-      next.className = "pagination-arrow";
-      next.type = "button";
-      next.setAttribute("aria-label", "Next page");
-      next.innerHTML = '<i class="uil uil-arrow-right"></i>';
-      next.disabled = currentPage === totalPages;
-      next.addEventListener("click", () => changePage(currentPage + 1));
-      pagination.appendChild(next);
+      previousButton.disabled = currentPage === 1;
+      nextButton.disabled = currentPage === totalPages;
+      currentPageLabel.textContent = String(currentPage).padStart(2, "0");
     }
 
     function changePage(page) {
       if (page < 1 || page > totalPages || page === currentPage) return;
 
+      const direction = page > currentPage ? 1 : -1;
       currentPage = page;
-      renderProjects(currentPage);
+
+      renderProjects(currentPage, direction);
       renderPagination();
 
       document.querySelector(".projects-section").scrollIntoView({
@@ -197,6 +217,9 @@
         block: "start"
       });
     }
+
+    previousButton.addEventListener("click", () => changePage(currentPage - 1));
+    nextButton.addEventListener("click", () => changePage(currentPage + 1));
 
     renderProjects(currentPage);
     renderPagination();
