@@ -1238,24 +1238,24 @@
         (() => {
           const perPage = 6;
           const projects = [
+            // PAGE 1 — EMPTY TEMPLATE SLOTS: replace these with your newest projects.
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
+            
+            // PAGE 2 — EXISTING PROJECTS.
             {title:"Netflix analytic Dashboard",category:"Data Analytics",description:"Netflix customer behavior analytical dashboard using distribution, rating and viewing data.",image:"./assets/img/Netflix-analytics dashbord.png",url:"#"},
             {title:"HR analytic Dashboard",category:"Data Analytics",description:"Tableau HR dashboard covering attrition, employees, gender, satisfaction, age and education.",image:"./assets/img/HR Analytics Dashboard.png",url:"#"},
             {title:"US Delay Flight 2017-2022",category:"Data Analytics",description:"Tableau dashboard analyzing delayed flights in the US by airline and year.",image:"./assets/img/US Flight Delay 2017-2022.png",url:"#"},
             {title:"Restaurants Order Overview Dashboard",category:"Data Analytics",description:"Interactive dashboard presenting key metrics and insights from restaurant order data.",image:"./assets/img/Resto-overview-dash.png",url:"https://lookerstudio.google.com/reporting/b357af35-231f-44e0-915e-1581a58369e8"},
-
-            // PAGE 1 — TEMPLATE SLOTS: replace these four objects with your newest projects.
-            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
-            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
-            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
-            {template:true,title:"Your New Project",category:"Your Category",description:"Add a short description of your latest project here.",image:"./assets/img/your-project.png",url:"#"},
-
-            // PAGE 2
             {title:"API Text Cleansing",category:"Development",description:"API for cleaning text and files, with a local /docs interface. Created for my bootcamp class.",image:"./assets/img/output.png",url:"https://github.com/rizkyaryendigumilang/23001042-15-Kiky-project-gold"},
             {title:"Wedding Invitation",category:"Web Development",description:"Simple digital wedding invitation built with HTML and CSS.",image:"./assets/img/Undangan Pernikahan Monica Wulandari & Bromo Ludhiro Yoesoep and 2 more pages - Personal - Microsoft_ Edge 2023-10-12 18-35-38.gif",url:"#"},
-
-            // TEMPLATE — copy this object when adding a project.
-            // {title:"Your Project",category:"Development",description:"Short project description.",image:"./assets/img/your-project.png",url:"https://your-project-link.com"},
-            // {title:"Another Project",category:"Data Analytics",description:"Short project description.",image:"./assets/img/another-project.png",url:"https://your-project-link.com"}
+            
+            // TEMPLATE — copy this object when adding another project.
+            // {title:"Your Project",category:"Development",description:"Short project description.",image:"./assets/img/your-project.png",url:"https://your-project-link.com"}
           ];
 
           const pages = document.getElementById("project-pages");
