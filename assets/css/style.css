@@ -2152,13 +2152,28 @@ textarea.contact_input {
   .project-pages,.project-image img,.project-link i,.project-page-arrow{transition:none!important}
 }
 
-/* Certificate category filters: subtle layer over the original carousel. */
+/* Certificate filters: two-level hierarchy that preserves the original carousel. */
 .certificate_filters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 auto 1.5rem;
+}
+
+.certificate_filter_group {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin: 0 auto 1.5rem;
+}
+
+.certificate_filter_group--category {
+  padding-top: 0.1rem;
+}
+
+.certificate_filter_group--category[hidden] {
+  display: none;
 }
 
 .certificate_filter {
@@ -2190,9 +2205,79 @@ textarea.contact_input {
   color: var(--container-color);
 }
 
+.certificate_filter_group--category .certificate_filter {
+  min-height: 29px;
+  padding-inline: 0.7rem;
+  font-size: 0.66rem;
+  font-weight: 500;
+  border-color: color-mix(in srgb, var(--title-color) 8%, transparent);
+}
+
+.certificate_filter_group--category .certificate_filter.is-active {
+  border-color: var(--first-color);
+  background: color-mix(in srgb, var(--first-color) 10%, transparent);
+  color: var(--first-color);
+}
+
+/* Empty certificate slots: intentionally visible only in the All view. */
+.certificate_template {
+  border: 1px dashed color-mix(in srgb, var(--first-color) 28%, var(--title-color));
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--container-color) 95%, var(--first-color) 5%);
+}
+
+.certificate_template_visual {
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: var(--input-color);
+  color: var(--first-color);
+}
+
+.certificate_template_visual i {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
+  font-size: 1.6rem;
+  opacity: 0.75;
+  transition: transform var(--motion-ui) var(--ease-out), opacity var(--motion-fast) ease;
+}
+
+.certificate_template:hover .certificate_template_visual i {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+.certificate_template_label {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  color: var(--first-color);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.certificate_template_hint {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--text-color-light);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
 @media screen and (max-width: 767px) {
   .certificate_filters {
+    gap: 0.55rem;
     margin-bottom: 1.25rem;
+  }
+
+  .certificate_filter_group {
+    gap: 0.3rem;
   }
 
   .certificate_filter {
@@ -2200,10 +2285,25 @@ textarea.contact_input {
     padding-inline: 0.7rem;
     font-size: 0.68rem;
   }
+
+  .certificate_filter_group--category .certificate_filter {
+    min-height: 28px;
+    padding-inline: 0.6rem;
+    font-size: 0.63rem;
+  }
+
+  .certificate_template_visual {
+    min-height: 210px;
+  }
+
+  .certificate_template:hover .certificate_template_visual i {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .certificate_filter {
+  .certificate_filter,
+  .certificate_template_visual i {
     transition: none;
   }
 }
