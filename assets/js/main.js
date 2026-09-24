@@ -133,8 +133,6 @@ if (swiperElement && typeof Swiper !== "undefined") {
     : [];
 
   const professionalTitles = new Set([
-    "Basic DevOps",
-    "Creating Professional Application Database",
     "SAP Certified - SAP Business One",
     "Cisco Certified Network Associate Security (CCNA)",
     "Cisco Certified Network Associate Cyber Ops (CCNA)",
