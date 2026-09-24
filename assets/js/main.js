@@ -123,11 +123,60 @@ if (education && work && educationHeader && workHeader) {
   });
 }
 
-// Certificate carousel
+// Certificate carousel + category filters
 const swiperElement = document.querySelector(".mySwiper");
 
 if (swiperElement && typeof Swiper !== "undefined") {
-  new Swiper(swiperElement, {
+  const certificateWrapper = swiperElement.querySelector(".swiper-wrapper");
+  const originalCertificateSlides = certificateWrapper
+    ? [...certificateWrapper.querySelectorAll(".certificate_content")].map((slide) => slide.outerHTML)
+    : [];
+
+  const professionalTitles = new Set([
+    "Basic DevOps",
+    "Creating Professional Application Database",
+    "SAP Certified - SAP Business One",
+    "Cisco Certified Network Associate Security (CCNA)",
+    "Cisco Certified Network Associate Cyber Ops (CCNA)",
+    "Cobit 2019 Framework & Methodology",
+  ]);
+
+  const classifyCertificate = (slideHtml) => {
+    const title = slideHtml.match(/<h3[^>]*class="certificate_title"[^>]*>([\\s\\S]*?)<\\/h3>/i)?.[1]
+      ?.replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/\\s+/g, " ")
+      .trim();
+
+    if (!title) return "other";
+    if (professionalTitles.has(title)) return "professional";
+    if (title === "Al Ghurair Investment" || title === "Personal Certificate Website") return "other";
+    return "course";
+  };
+
+  const filters = [
+    { key: "all", label: "All" },
+    { key: "professional", label: "Professional" },
+    { key: "course", label: "Courses & Training" },
+  ];
+
+  const filterContainer = document.createElement("div");
+  filterContainer.className = "certificate_filters";
+  filterContainer.setAttribute("role", "group");
+  filterContainer.setAttribute("aria-label", "Certificate categories");
+
+  filters.forEach(({ key, label }) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "certificate_filter";
+    button.dataset.filter = key;
+    button.textContent = label;
+    filterContainer.appendChild(button);
+  });
+
+  swiperElement.parentElement?.insertBefore(filterContainer, swiperElement);
+
+  const swiper = new Swiper(swiperElement, {
     cssMode: true,
     loop: true,
     navigation: {
@@ -140,6 +189,28 @@ if (swiperElement && typeof Swiper !== "undefined") {
     },
     mousewheel: true,
     keyboard: true,
+  });
+
+  const applyCertificateFilter = (filter) => {
+    const selectedSlides = filter === "all"
+      ? originalCertificateSlides
+      : originalCertificateSlides.filter((slide) => classifyCertificate(slide) === filter);
+
+    swiper.removeAllSlides();
+    swiper.appendSlide(selectedSlides);
+    swiper.update();
+    swiper.slideTo(0, 0);
+
+    filterContainer.querySelectorAll(".certificate_filter").forEach((button) => {
+      const isActive = button.dataset.filter === filter;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+  };
+
+  filterContainer.querySelectorAll(".certificate_filter").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.filter === "all" ? "true" : "false");
+    button.addEventListener("click", () => applyCertificateFilter(button.dataset.filter));
   });
 }
 
