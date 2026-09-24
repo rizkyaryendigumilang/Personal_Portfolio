@@ -142,7 +142,7 @@ if (swiperElement && typeof Swiper !== "undefined") {
   ]);
 
   const classifyCertificate = (slideHtml) => {
-    const title = slideHtml.match(/<h3[^>]*class="certificate_title"[^>]*>([\\s\\S]*?)<\\/h3>/i)?.[1]
+    const title = slideHtml.match(/<h3[^>]*class="certificate_title"[^>]*>([\s\S]*?)<\/h3>/i)?.[1]
       ?.replace(/<[^>]+>/g, "")
       .replace(/&amp;/g, "&")
       .replace(/\s+/g, " ")
