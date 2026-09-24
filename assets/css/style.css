@@ -2307,3 +2307,24 @@ textarea.contact_input {
     transition: none;
   }
 }
+
+/* Certificate button: compact icon + label treatment. */
+.certificate_button {
+  gap: 0.35rem;
+}
+
+.certificate_button .certificate_button_icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex: 0 0 auto;
+  fill: currentColor;
+  transition: transform 0.3s;
+}
+
+.certificate_button .certificate_button_icon--after {
+  margin-left: 0.05rem;
+}
+
+.certificate_button:hover .certificate_button_icon--after {
+  transform: translateX(0.2rem);
+}
