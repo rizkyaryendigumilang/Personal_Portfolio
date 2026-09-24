@@ -2314,8 +2314,8 @@ textarea.contact_input {
 }
 
 .certificate_button .certificate_button_icon {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 0.78rem;
+  height: 0.78rem;
   flex: 0 0 auto;
   fill: currentColor;
   transition: transform 0.3s;
