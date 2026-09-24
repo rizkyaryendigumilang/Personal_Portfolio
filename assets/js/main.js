@@ -123,7 +123,7 @@ if (education && work && educationHeader && workHeader) {
   });
 }
 
-// Certificate carousel + category filters
+// Certificate carousel + hierarchical category filters
 const swiperElement = document.querySelector(".mySwiper");
 
 if (swiperElement && typeof Swiper !== "undefined") {
@@ -133,45 +133,102 @@ if (swiperElement && typeof Swiper !== "undefined") {
     : [];
 
   const professionalTitles = new Set([
+    "Human Capital Human Resource Management (BNSP)",
     "SAP Certified - SAP Business One",
     "Cisco Certified Network Associate Security (CCNA)",
     "Cisco Certified Network Associate Cyber Ops (CCNA)",
     "Cobit 2019 Framework & Methodology",
   ]);
 
-  const classifyCertificate = (slideHtml) => {
-    const title = slideHtml.match(/<h3[^>]*class="certificate_title"[^>]*>([\s\S]*?)<\/h3>/i)?.[1]
-      ?.replace(/<[^>]+>/g, "")
-      .replace(/&amp;/g, "&")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    if (!title) return "other";
-    if (professionalTitles.has(title)) return "professional";
-    if (title === "Al Ghurair Investment" || title === "Personal Certificate Website") return "other";
-    return "course";
+  const categoryMap = {
+    "Data Science Certificate": "data",
+    "Data Analyst Certificate": "data",
+    "Introduction To Machine Learning": "data",
+    "Introduction to Data Preprocessing": "data",
+    "Correlation Analysis": "data",
+    "Probability And Distribution": "data",
+    "Hypothesis testing": "data",
+    "Data Visualization": "data",
+    "Statistics Introduction": "data",
+    "Descriptive Analysis": "data",
+    "Kaggle, GitHub, Kedro": "data",
+    "Data Science Introduction": "data",
+    "Process Design Thinking UI/UX": "uiux",
+    "Fundamental UI/UX": "uiux",
+    "Creating Professional Application Database": "data",
+    "Basic DevOps": "devops",
+    "Computer Networking for Beginners": "networking",
+    "Cloud Practitioner Essentials (Belajar Dasar AWS Cloud)": "cloud",
+    "Human Capital Human Resource Management (BNSP)": "hr",
+    "Competency And Benefit": "hr",
+    "HR Competency": "hr",
+    "Recruitment Specialist": "hr",
+    "Training & Development Human Resource": "hr",
+    "Financial Services Competency Program": "other",
+    "SAP Certified - SAP Business One": "erp",
+    "Cisco Certified Network Associate Security (CCNA)": "security",
+    "Cisco Certified Network Associate Cyber Ops (CCNA)": "security",
+    "Cobit 2019 Framework & Methodology": "it-governance",
   };
 
-  const filters = [
-    { key: "all", label: "All" },
-    { key: "professional", label: "Professional" },
-    { key: "course", label: "Courses & Training" },
-  ];
+  const categoryLabels = {
+    data: "Data",
+    devops: "DevOps",
+    cloud: "Cloud",
+    security: "Security",
+    uiux: "UI/UX",
+    hr: "HR",
+    networking: "Networking",
+    erp: "ERP",
+    "it-governance": "IT Governance",
+    other: "Other",
+  };
+
+  const getCertificateTitle = (slideHtml) => slideHtml
+    .match(/<h3[^>]*class="certificate_title"[^>]*>([\s\S]*?)<\/h3>/i)?.[1]
+    ?.replace(/<[^>]+>/g, "")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const classifyCertificate = (slideHtml) => {
+    const title = getCertificateTitle(slideHtml);
+    return {
+      type: professionalTitles.has(title) ? "professional" : "course",
+      category: categoryMap[title] || "other",
+    };
+  };
 
   const filterContainer = document.createElement("div");
   filterContainer.className = "certificate_filters";
-  filterContainer.setAttribute("role", "group");
-  filterContainer.setAttribute("aria-label", "Certificate categories");
+  filterContainer.setAttribute("aria-label", "Certificate filters");
 
-  filters.forEach(({ key, label }) => {
+  const typeFilters = document.createElement("div");
+  typeFilters.className = "certificate_filter_group certificate_filter_group--type";
+  typeFilters.setAttribute("role", "group");
+  typeFilters.setAttribute("aria-label", "Certificate type");
+
+  const categoryFilters = document.createElement("div");
+  categoryFilters.className = "certificate_filter_group certificate_filter_group--category";
+  categoryFilters.setAttribute("role", "group");
+  categoryFilters.setAttribute("aria-label", "Certificate category");
+
+  const createFilterButton = (key, label, group) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "certificate_filter";
     button.dataset.filter = key;
     button.textContent = label;
-    filterContainer.appendChild(button);
-  });
+    group.appendChild(button);
+    return button;
+  };
 
+  createFilterButton("all", "All", typeFilters);
+  createFilterButton("professional", "Professional", typeFilters);
+  createFilterButton("course", "Courses & Training", typeFilters);
+
+  filterContainer.appendChild(typeFilters);
+  filterContainer.appendChild(categoryFilters);
   swiperElement.parentElement?.insertBefore(filterContainer, swiperElement);
 
   const swiper = new Swiper(swiperElement, {
@@ -189,29 +246,90 @@ if (swiperElement && typeof Swiper !== "undefined") {
     keyboard: true,
   });
 
-  const applyCertificateFilter = (filter) => {
-    const selectedSlides = filter === "all"
-      ? originalCertificateSlides
-      : originalCertificateSlides.filter((slide) => classifyCertificate(slide) === filter);
+  let activeType = "all";
+  let activeCategory = "all";
 
-    swiper.removeAllSlides();
-    swiper.appendSlide(selectedSlides);
-    swiper.update();
-    swiper.slideTo(0, 0);
+  const renderCategoryFilters = () => {
+    categoryFilters.innerHTML = "";
 
-    filterContainer.querySelectorAll(".certificate_filter").forEach((button) => {
-      const isActive = button.dataset.filter === filter;
+    if (activeType === "all") {
+      categoryFilters.hidden = true;
+      return;
+    }
+
+    categoryFilters.hidden = false;
+
+    const categories = [...new Set(
+      originalCertificateSlides
+        .map(classifyCertificate)
+        .filter((item) => item.type === activeType)
+        .map((item) => item.category)
+    )];
+
+    createFilterButton("all", "All", categoryFilters);
+
+    categories.forEach((category) => {
+      createFilterButton(category, categoryLabels[category] || "Other", categoryFilters);
+    });
+
+    categoryFilters.querySelector(".certificate_filter")?.classList.add("is-active");
+  };
+
+  const updateActiveButtons = () => {
+    typeFilters.querySelectorAll(".certificate_filter").forEach((button) => {
+      const isActive = button.dataset.filter === activeType;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+
+    categoryFilters.querySelectorAll(".certificate_filter").forEach((button) => {
+      const isActive = button.dataset.filter === activeCategory;
       button.classList.toggle("is-active", isActive);
       button.setAttribute("aria-pressed", String(isActive));
     });
   };
 
-  filterContainer.querySelectorAll(".certificate_filter").forEach((button) => {
-    button.setAttribute("aria-pressed", button.dataset.filter === "all" ? "true" : "false");
-    button.addEventListener("click", () => applyCertificateFilter(button.dataset.filter));
-  });
-}
+  const applyCertificateFilter = () => {
+    const selectedSlides = originalCertificateSlides.filter((slide) => {
+      if (slide.includes('data-certificate-template="true"')) {
+        return activeType === "all";
+      }
 
+      const item = classifyCertificate(slide);
+      const typeMatches = activeType === "all" || item.type === activeType;
+      const categoryMatches = activeCategory === "all" || item.category === activeCategory;
+      return typeMatches && categoryMatches;
+    });
+
+    swiper.removeAllSlides();
+    swiper.appendSlide(selectedSlides);
+    swiper.update();
+    swiper.slideTo(0, 0);
+    updateActiveButtons();
+  };
+
+  typeFilters.querySelectorAll(".certificate_filter").forEach((button) => {
+    button.setAttribute("aria-pressed", button.dataset.filter === "all" ? "true" : "false");
+
+    button.addEventListener("click", () => {
+      activeType = button.dataset.filter;
+      activeCategory = "all";
+      renderCategoryFilters();
+      applyCertificateFilter();
+    });
+  });
+
+  categoryFilters.addEventListener("click", (event) => {
+    const button = event.target.closest(".certificate_filter");
+    if (!button) return;
+
+    activeCategory = button.dataset.filter;
+    applyCertificateFilter();
+  });
+
+  renderCategoryFilters();
+  updateActiveButtons();
+}
 // Scroll-based navigation state
 const sections = document.querySelectorAll("section[id]");
 
