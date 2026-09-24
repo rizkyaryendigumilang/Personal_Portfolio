@@ -145,7 +145,7 @@ if (swiperElement && typeof Swiper !== "undefined") {
     const title = slideHtml.match(/<h3[^>]*class="certificate_title"[^>]*>([\\s\\S]*?)<\\/h3>/i)?.[1]
       ?.replace(/<[^>]+>/g, "")
       .replace(/&amp;/g, "&")
-      .replace(/\\s+/g, " ")
+      .replace(/\s+/g, " ")
       .trim();
 
     if (!title) return "other";
