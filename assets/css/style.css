@@ -1672,23 +1672,18 @@ section {
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--first-color) 12%, transparent);
 }
 
-/* Certificate carousel: cards should read as contained surfaces. */
-.certificate_content {
-  border: 1px solid var(--border-subtle);
-  border-radius: 1rem;
-  background: color-mix(in srgb, var(--container-color) 96%, var(--first-color) 4%);
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
+/* Certificate: original carousel layout + subtle polish. */
 .certificate_img {
-  max-height: 240px;
+  height: 220px;
   object-fit: contain;
-  transition: transform 280ms var(--ease-out);
+  border-radius: 0.5rem;
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    filter var(--motion-fast) ease;
 }
 
 .certificate_content:hover .certificate_img {
-  transform: scale(1.015);
+  transform: scale(1.018);
 }
 
 .certificate_title {
@@ -1696,28 +1691,45 @@ section {
 }
 
 .certificate_description {
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 .swiper-button-prev,
 .swiper-button-next {
-  transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) ease;
+  transition:
+    transform var(--motion-ui) var(--ease-out),
+    opacity var(--motion-fast) ease;
 }
 
 .swiper-button-prev:hover {
   transform: translateX(-3px);
+  opacity: 0.9;
 }
 
 .swiper-button-next:hover {
   transform: translateX(3px);
+  opacity: 0.9;
 }
 
 .swiper-pagination-bullet {
-  transition: transform var(--motion-fast) var(--ease-out), opacity var(--motion-fast) ease;
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    opacity var(--motion-fast) ease;
 }
 
 .swiper-pagination-bullet-active {
-  transform: scale(1.15);
+  transform: scale(1.12);
+}
+
+@media screen and (max-width: 767px) {
+  .certificate_img {
+    height: auto;
+    max-height: 210px;
+  }
+
+  .certificate_content:hover .certificate_img {
+    transform: none;
+  }
 }
 
 /* Projects: fix old demo-like spacing and make the existing cards feel
