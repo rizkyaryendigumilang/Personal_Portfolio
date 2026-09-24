@@ -2151,3 +2151,59 @@ textarea.contact_input {
 @media (prefers-reduced-motion:reduce){
   .project-pages,.project-image img,.project-link i,.project-page-arrow{transition:none!important}
 }
+
+/* Certificate category filters: subtle layer over the original carousel. */
+.certificate_filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 auto 1.5rem;
+}
+
+.certificate_filter {
+  min-height: 32px;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-color);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease,
+    transform var(--motion-fast) var(--ease-out);
+}
+
+.certificate_filter:hover {
+  border-color: var(--first-color);
+  transform: translateY(-1px);
+}
+
+.certificate_filter.is-active {
+  border-color: var(--title-color);
+  background: var(--title-color);
+  color: var(--container-color);
+}
+
+@media screen and (max-width: 767px) {
+  .certificate_filters {
+    margin-bottom: 1.25rem;
+  }
+
+  .certificate_filter {
+    min-height: 30px;
+    padding-inline: 0.7rem;
+    font-size: 0.68rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .certificate_filter {
+    transition: none;
+  }
+}
